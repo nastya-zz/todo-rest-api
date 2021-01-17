@@ -1,7 +1,8 @@
 import {Entity, Column, PrimaryGeneratedColumn} from "typeorm";
+import {ITask} from "../interfaces/ITask";
 
 @Entity()
-export class Task {
+export class Task implements ITask {
     @PrimaryGeneratedColumn()
     id: number;
 

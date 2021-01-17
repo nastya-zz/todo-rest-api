@@ -3,6 +3,7 @@ import express from 'express';
 import "reflect-metadata";
 import {createConnection, getConnection} from "typeorm";
 import {Task} from "./entity/Task"
+import {ITask} from "./interfaces/ITask";
 
 const app = express();
 app.disable("x-powered-by");
@@ -32,7 +33,7 @@ app.get('/api/tasks', async (req, res) => {
 
     try {
         const repository = getConnection().getRepository(Task);
-        const allTasks :Task[] = await repository.find();
+        const allTasks :ITask[] = await repository.find();
 
         res.status(200).send(allTasks)
     }
@@ -45,7 +46,7 @@ app.get('/api/tasks', async (req, res) => {
 app.post('/api/tasks', async (req, res) => {
 
     try {
-        const task = new Task();
+        const task: ITask = new Task();
 
         task.text = req.body.text;
         task.date = req.body.date;
@@ -67,7 +68,7 @@ app.put('/api/tasks/:id', async (req, res) => {
     try {
         const repository = getConnection().getRepository(Task);
 
-        const task :Task = await repository.findOne({
+        const task :ITask = await repository.findOne({
             id: (+req.params.id)
         });
 
@@ -76,7 +77,7 @@ app.put('/api/tasks/:id', async (req, res) => {
         task.done = req.body.done;
 
         await repository.save(task);
-        const allTasks :Task[] = await repository.find();
+        const allTasks :ITask[] = await repository.find();
 
         res.status(200).send(allTasks);
     }
@@ -89,12 +90,12 @@ app.delete('/api/tasks/:id',async (req, res) => {
     try {
         const repository = getConnection().getRepository(Task);
 
-        const task :Task = await repository.findOne({
+        const task :ITask = await repository.findOne({
             id: (+req.params.id)
         });
 
         await repository.delete(task);
-        const allTasks :Task[] = await repository.find();
+        const allTasks :ITask[] = await repository.find();
 
         res.status(200).send(allTasks);
     }
